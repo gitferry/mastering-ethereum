@@ -214,7 +214,7 @@ $("#button").click(function() {
 ```
 以上的代码就简单地实现了对合约中两个函数的调用，分别读取和显示``name``和``age``变量。
 
-到此我们就完成了全部的代码，完整代码可以在 [https://github.com/gitferry/mastering-ethereum](https://github.com/gitferry/mastering-ethereum) 中找到。在浏览器中打开``index.html``测试效果如下图（输入名字和年龄后刷新）。
+到此我们就完成了全部的代码，完整代码可以在 [https://github.com/gitferry/mastering-ethereum/web3-interact-with-Solidity/](https://github.com/gitferry/mastering-ethereum/web3-interacte-with-Solidity) 中找到。在浏览器中打开``index.html``测试效果如下图（输入名字和年龄后刷新）。
 
 ![](./images/page.png)
 
