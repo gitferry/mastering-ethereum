@@ -182,7 +182,9 @@ web3.eth.defaultAccount = web3.eth.accounts[0];
 接下来需要让我们的``web3``知道我们的合约是什么样的，这里需要用到合约的 [ABI（Application Binary Interface）](https://github.com/ethereum/wiki/wiki/Ethereum-Contract-ABI)。``ABI``可以使我们调用合约的函数，并且从合约中获取数据。
 
 在上文中我们已经在 Remix 中创建了我们的合约，这时重新回到 Remix，在 Compile 的 tab 下我们点击``Details`` 出现的页面中我们可以拷贝合约的``ABI``，如下图所示。
+
 ![](./images/ABI.png)
+
 将其复制到代码中：
 
 ```
