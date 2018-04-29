@@ -47,9 +47,9 @@ contract InfoContract {
 
 代码很简单，就是简单的给``name``和``age``变量赋值与读取，接下来切换到 run 的 tab 下，将``Environment``切换成``Web3 Provider``，并输入我们的测试链的地址``http://127.0.0.1:7545``，这里对这三个选项做一简单说明：
 
-* ``Javascript VM``：简单的Javascript虚拟机环境，纯粹练习智能合约编写的时候可以选择
-* ``Injected Web3``：会连接到以太坊官方的测试网络，如``Ropsten Test Network``
-* ``Web3 Provider``：连接到私有的测试网络。
+* ``Javascript VM``：简单的Javascript虚拟机环境，纯粹练习智能合约编写的时候可以选择。
+* ``Injected Web3``：连接到嵌入到页面的Web3，比如连接到 ``MetaMask``。
+* ``Web3 Provider``：连接到自定义的节点。
 
 如果连接成功，那么在下面的``Account``的选项会默认选择 Ganache 创建的第一个账户地址。接下来我们点击``Create``就会将我们的智能合约部署到我们的测试网中。接下来 Remix 的页面不要关闭，在后面编写前端代码时还要用到合约的地址以及``ABI``信息。
 
