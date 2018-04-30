@@ -6,9 +6,8 @@
 ### 目录
 
 1. [Web与智能合约交互实战](./web3-interact-with-Solidity/web3-interact-with-Solidity.md)
-2. [捕捉Solidity中的event]
-3. [显示ERC20合约中每个地址的余额]
-4. [深入 EVM 原理]
+2. [捕捉智能合约中的event实战](./Solidity-event/Solidity-event.md)
+3. [深入 EVM 原理]
 
 ### 联系我
 
