@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <img id="loader" src="https://loading.io/spinners/double-ring/lg.double-ring-spinner.gif">
+    <title>ERC20 Token Sample</title>
+
+    <link rel="stylesheet" type="text/css" href="main.css">
+
+    <script src="./node_modules/web3/dist/web3.min.js"></script>
+
+</head>
+<body>
+    <div class="container">
+
+        <h1>ERC20 Token</h1>
+
+        
+
+        <!-- <label for="name" class="col-lg-2 control-label">From</label>
+        <input id="from" type="text"> -->
+
+        <label for="name" class="col-lg-2 control-label">To</label>
+        <input id="to" type="text">
+
+        <label for="name" class="col-lg-2 control-label">Tokens</label>
+        <input id="tokens" type="text">
+
+        <button id="button">Send</button>
+
+        <ol id="instructor"></ol>
+
+
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+
+    <script>
+
+        if (typeof web3 !== 'undefined') {
+            web3 = new Web3(web3.currentProvider);
+        } else {
+            // set the provider you want from Web3.providers
+            web3 = new Web3(new Web3.providers.HttpProvider("http://localhost:7545"));
+        }
+
+        // 将Ganache创建的第一个账号当作默认账号
+        web3.eth.defaultAccount = web3.eth.accounts[0];
+        
+        // 添加合约的ABI
+        var tokenerc20Contract = web3.eth.contract([{"constant":true,"inputs":[],"name":"name","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_spender","type":"address"},{"name":"_value","type":"uint256"}],"name":"approve","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"totalSupply","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_from","type":"address"},{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transferFrom","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"decimals","outputs":[{"name":"","type":"uint8"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_value","type":"uint256"}],"name":"burn","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"}],"name":"balanceOf","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_from","type":"address"},{"name":"_value","type":"uint256"}],"name":"burnFrom","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[],"name":"symbol","outputs":[{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":false,"inputs":[{"name":"_to","type":"address"},{"name":"_value","type":"uint256"}],"name":"transfer","outputs":[],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":false,"inputs":[{"name":"_spender","type":"address"},{"name":"_value","type":"uint256"},{"name":"_extraData","type":"bytes"}],"name":"approveAndCall","outputs":[{"name":"success","type":"bool"}],"payable":false,"stateMutability":"nonpayable","type":"function"},{"constant":true,"inputs":[{"name":"","type":"address"},{"name":"","type":"address"}],"name":"allowance","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[{"name":"initialSupply","type":"uint256"},{"name":"tokenName","type":"string"},{"name":"tokenSymbol","type":"string"}],"payable":false,"stateMutability":"nonpayable","type":"constructor"},{"anonymous":false,"inputs":[{"indexed":true,"name":"from","type":"address"},{"indexed":true,"name":"to","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Transfer","type":"event"},{"anonymous":false,"inputs":[{"indexed":true,"name":"from","type":"address"},{"indexed":false,"name":"value","type":"uint256"}],"name":"Burn","type":"event"}]);   
+        
+        // 添加合约地址
+        var tokenerc20 = tokenerc20Contract.at('0xdca44800d01ab7768902a11757b5ca1801a59efe');
+
+        // 声明transfer事件，所要查找的区块数从0-2000
+        var transferEvent = tokenerc20.Transfer({}, {fromBlock: 0, toBlock: 2000});
+
+        // 通过前端进行token交易
+        $("#button").click(function() {
+           $("#loader").show();
+           tokenerc20.transfer($("#to").val(), $("#tokens").val());
+           });
+        
+        var holdersArray = new Array();
+
+        // 查找所有Transfer事件
+        transferEvent.watch(function(error, result){
+            if (!error)
+                {
+                    $("#loader").hide();
+                    
+                    // 判断From或者To的地址是否在holdersArray中出现
+                    var isFromExist = false;
+                    var isToExist = false;
+                    for (var i = 0; i < holdersArray.length; i++){
+                        if (result.args.from == holdersArray[i]) {
+                            isFromExist = true;
+                        }
+                        if (result.args.to == holdersArray[i]) {
+                            isToExist = true;
+                        }
+                    }
+                    
+                    // 找的新的账户地址，输出余额信息
+                    if (isFromExist == false) {
+                        var holder = result.args.from;
+                        holdersArray.push(holder);
+                        var balanceOfHolder = tokenerc20.balanceOf(holder)
+                        $("#instructor").append("<div>" + holder + ' has balance of ' + balanceOfHolder + "</div>");
+                    }
+
+                    if (isToExist == false) {
+                        var holder = result.args.to;
+                        holdersArray.push(holder);
+                        var balanceOfHolder = tokenerc20.balanceOf(holder)
+                        $("#instructor").append("<div>" + holder + ' has balance of ' + balanceOfHolder + "</div>");
+                    }
+                } else {
+                    $("#loader").hide();
+                    console.log(error);
+                }
+        });
+
+    </script>
+
+</body>
+</html>
