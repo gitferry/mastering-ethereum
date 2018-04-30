@@ -10,7 +10,7 @@
 在实战环节中，我们将使用 Javascript API 捕捉一个 ERC20 合约中的 Transfer() 事件，并在网页中显示出合约中每个账户的余额。
 
 ## 智能合约中的event
-``event``，顾名思义就是智能合约在执行过程中所发生的一系列事件，并且被记录在 ``EVM`` 的日志中，使得程序员可以在 Dapp 的前端页面上调用 Javascript 的回调函数。
+``event``，顾名思义就是智能合约在执行过程中所发生的一系列事件，被记录在 ``EVM`` 的日志中，使得程序员可以在 Dapp 的前端页面上调用 Javascript 的回调函数。
 ``event`` 由智能合约的编写者在代码中使用 ``event`` 关键词进行声明，示例如下：
 
 ```
@@ -21,7 +21,7 @@ event Deposit(
     );
 ```
 
-当event被调用时，其中的参数会被存储在交易的日志当中，示例如下：
+当 event 被调用时，其中的参数会被存储在交易的日志当中，示例如下：
 
 ```
 function deposit(bytes32 _id) public payable {
@@ -32,9 +32,10 @@ function deposit(bytes32 _id) public payable {
     }
 ```
 
-## 捕捉event
-使用 Javascript API 可以 *捕捉* event，注意这里说 *捕捉* 是因为我们既可以实时 *监控* 事件，也可以从历史区块中 *检索* event。
-首先将event实例化：
+## 捕捉 event
+使用 Javascript API 可以 **捕捉** event，注意这里说 **捕捉** 是因为我们既可以实时 **监控** 事件，也可以从历史区块中 **检索** event。
+
+首先将 event 实例化：
 
 ```
 var event = myContractInstance.MyEvent({valueA: 23} [, additionalFilterObject])
@@ -44,7 +45,7 @@ var event = myContractInstance.MyEvent({valueA: 23} [, additionalFilterObject])
 
 * ``Object``：使用 filter 之后得到的索引返回值，例如，filter 可以是 ``{'valueA': 1, 'valueB': [myFirstAddress, mySecondAddress]}``。
     默认情况下，所有 filter 的值是 ``null``，这意味着这些值会匹配当前合约发送的任意类型的 event。
-* ``Object``：额外的过滤条件，例如可以使用 ``fromBlock`` 和 ``toBlock`` 限定所要查询的区块的范围，详情可以参考[filter](https://github.com/ethereum/wiki/wiki/JavaScript-API#web3ethfilter)。
+* ``Object``：额外的过滤条件，例如可以使用 ``fromBlock`` 和 ``toBlock`` 限定所要查询的区块的范围，详情可以参考 [filter](https://github.com/ethereum/wiki/wiki/JavaScript-API#web3ethfilter)。
 * ``Function``：如果将一个回调函数作为最后一个参数的话，就会立刻开始检索 event，所以没有必要再调用 ``myEvent.watch(function(){})``。
 
 完整的示例如下：
@@ -65,7 +66,8 @@ myEvent.stopWatching();
 
 ## 捕捉 event 实战
 在实战环节，我们将实现如何获得一个ERC20合约中，有多少地址拥有代币，以及每个地址有多少代币。
-在 [ERC20 标准合约](https://theethereum.wiki/w/index.php/ERC20_Token_Standard)中，有一个 event 定义如下：
+
+在 [ERC20 标准合约](https://theethereum.wiki/w/index.php/ERC20_Token_Standard) 中，有一个 event 定义如下：
 
 ```
 event Transfer(address indexed from, address indexed to, uint tokens);
@@ -76,11 +78,11 @@ event Transfer(address indexed from, address indexed to, uint tokens);
 
 实现步骤如下：
 
-1. 启动Galanche测试环境；
-2. 在 Remix 中创建ERC20智能合约；
+1. 启动 Ganache 测试环境；
+2. 在 Remix 中创建 ERC20 智能合约；
 3. 编写前端代码，与合约交互。
 
-前两步关于如何搭建本地测试环境以及如何在 Remix 中创建合约的部分可以参见我的上一篇文章
+前两步关于如何使用 Ganache 搭建本地测试环境以及如何在 Remix 中创建合约的部分可以参见我的上一篇文章
 [Web与智能合约交互实战](https://github.com/gitferry/mastering-ethereum/blob/master/web3-interact-with-Solidity/web3-interact-with-Solidity.md)。
 这里将重点放在第三步。
 
@@ -240,12 +242,18 @@ button {
 ```
 
 首先使用 ``Web3`` 关联 ERC20 合约，将合约的 ABI 以及合约地址都复制到代码中。
-当用户点击发送按钮时，会调用合约中的 ``transfer()`` 函数（测试时可以使用 ``Ganache`` 创建的10个账户进行交易）。
+
+当用户点击发送按钮时，会调用合约中的 ``transfer()`` 函数（测试时可以使用 Ganache 创建的10个账户进行交易）。
+
 接下来我们实例化 ``Transfer()`` 事件，将过滤条件设置为 ``{fromBlock: 0, toBlock: 'latest'}``，即从所有区块中筛选交易。
+
 在回调函数中，我们将收集所有交易中涉及到的交易双方的地址，并将每个新地址的余额显示在页面上。
+
 最终效果显示如下：
 
 ![result](./images/result.png)
+
+文中涉及的所有代码可以在 [github](https://github.com/gitferry/mastering-ethereum/tree/master/Solidity-event) 获取。
 
 ## 参考链接
 
