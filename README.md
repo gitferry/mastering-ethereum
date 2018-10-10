@@ -8,6 +8,7 @@
 1. [Web与智能合约交互实战](./web3-interact-with-Solidity/web3-interact-with-Solidity.md)
 2. [捕捉智能合约中的event实战](./Solidity-event/Solidity-event.md)
 3. [深入 EVM 原理]
+4. [深入理解 Plasma ](./Plasma-in-depth/plasma-in-depth.md)
 
 ### 联系我
 
