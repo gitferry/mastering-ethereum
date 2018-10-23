@@ -60,17 +60,23 @@ Plasma 的一个关键设计之一就是允许用户构造防伪证明（Fraud P
 
 为了实现快速取款，取款方和 LP 可以利用一个流动合约（liquidity contract）。假设取款方是 Alice，她想要执行快速取款将 10 以太币从子链转移到主链。她首先向流动合约发送 10 以太币，注意这里的交易是在子链上进行的。当这个交易被子链打包成区块后，Alice 可以调用合约中的某个退出函数，这时 Alice 将获取一个代表她这笔资产的 token。Bob 作为 LP，他检查了子链上数据之后证明 Alice 的取款没有问题之后愿意以 9 以太币的价格购买这个 token。Alice 将 token 卖给 Bob，获得了 9 以太币，Bob 赚取了 1 以太币。
 
-需要注意的是，实现快速取款的前提条件是没有拜占庭行为发生，即没有扣留区块攻击发生，因为 LP 需要验证取款方的交易历史。因此当有拜占庭行为发生时还是需要批量取款。
+需要注意的是，实现快速取款的前提条件是没有拜占庭行为发生，即没有扣留区块攻击发生，因为 LP 需要验证取款方的交易历史。
 
 #### 批量取款（Mass Withdrawal）
 
+当子链中有拜占庭行为（例如，区块扣留攻击）发生时，将会影响以后生成防伪证明，因此网络中的每个用户都有责任快速退出子链。虽然批量取款（Mass Withdrawal）操作不是必要选择，但当大量用户执行取款时很可能会造成主链拥塞，也会消耗更多的 gas，因此批量取款是当子链受到攻击时更好的选择。
 
+批量取款操作由于所采用的模型（UTXO 模型或者账户模型）不同会有较大的差别，而且目前关于批量取款的操作细节也正在研讨当中，因此这里只对批量取款做简单介绍，想要了解目前研究状态可以参考[[4]](https://ethresear.ch/t/basic-mass-exits-for-plasma-mvp/3316)。
 
+当子链中有拜占庭行为发生时，用户之间可以共同协作执行批量取款。这时会有一个节点扮演取款处理人（Exit Processor）的角色，简称为 EP，负责当前某个批量操作（可以同时有多个批量取款操作发生，但同一个取款申请不能存在于多个批量取款），并且可以收取服务费作为报酬。EP 将构造一个位图（bitmap，即一串0/1）记录哪些资产要执行取款。之后 EP 将利用现有的区块数据检查每个取款是否合法，之后将构造一个批量退出初始化交易（Mass Exit Initiation Transaction，MEIT），并将其发送到主链上。在 MEIT 被主链确认之前，每个用户都可以对这个交易提出异议。当争议期结束，MEIT 被主链确认，批量取款成功。
 
 ### 总结
 
-## 相关资源
+本文主要对 Plasma 框架中一些关键操作进行了比较详细的介绍，但如果不依托于某个实际的 Plasma 项目，对一些细节还是很难理解。因此在后面的文章中将会介绍 Plasma MVP 以及 Plasma Cash。
+
+### 相关资源
 
 1. [https://plasma.io/](https://plasma.io/)
 2. [https://ethresear.ch/t/plasma-is-plasma/2195](https://ethresear.ch/t/plasma-is-plasma/2195)
 3. [https://ethresear.ch/t/simple-fast-withdrawals/2128](https://ethresear.ch/t/simple-fast-withdrawals/2128)
+4. [https://ethresear.ch/t/basic-mass-exits-for-plasma-mvp/3316](https://ethresear.ch/t/basic-mass-exits-for-plasma-mvp/3316)
