@@ -9,7 +9,7 @@ Plasma 的主要思想就是将大部分计算过程都转移到链下进行，�
 
 用户在将主链的资产（如以太币或者其它 ERC20 合约发布的 token）转移到 Plasma Chain 的过程称为存款（Deposit），具体做法是直接向主链上的 Plasma 合约发送以太币或 token。Plasma 合约收到 Deposit 交易后会在子链上创建跟 Deposit 数额一致的交易，并将其打包进区块中，作为存款确认的证明。这个过程如下图所示（来源自[[1]](https://plasma.io/)）。
 
-<img src="./images/Deposit.png"  width="400" height="360" alt="Blockchains of Blockchain" />
+<img src="https://raw.githubusercontent.com/gitferry/mastering-ethereum/master/Plasma-in-depth/images/Deposit.png"  width="400" height="360" alt="Blockchains of Blockchain" />
 
 当用户看到子链上自己之前存款的交易被确认后，就可以在子链上使用这笔资产（给子链上的其他用户发送交易或者退出子链等）。
 
@@ -33,7 +33,7 @@ Plasma 的一个关键设计之一就是允许用户构造防伪证明（Fraud P
 
 如下图所示（来源自[[1]](https://plasma.io/)），子链中每个节点都存有 1-4 个区块的数据。假设区块 1-3 已经被验证合法，而区块 4 中存在恶意交易，那么每个节点都可以使用 1-4 个区块中的数据构造防伪证明提交到主链，主链验证后将子链中的状态回滚到区块 1-3。
 
-<img src="./images/fraud-proofs.png"  width="700" height="200" alt="Blockchains of Blockchain" />
+<img src="https://raw.githubusercontent.com/gitferry/mastering-ethereum/master/Plasma-in-depth/images/fraud-proofs.png"  width="700" height="200" alt="Blockchains of Blockchain" />
 
 防伪证明还可以使用零知识证明（zk-SNARKs 或者 STARKs）来构造，但由于目前通过零知识证明生成证明的时间和空间还有待优化，目前设计的 Plasma 并不依赖零知识证明。零知识证明在 Plasma 中的应用是一个很有前景的研究方向，感兴趣的读者可以参考以太坊研究团队关于这方面的研究[[2]](https://ethresear.ch/t/plasma-is-plasma/2195))。
 
