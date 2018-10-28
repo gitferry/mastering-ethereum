@@ -10,6 +10,7 @@
 3. [深入 EVM 原理]
 4. [深入理解 Plasma （一）Plasma 框架](./Plasma-in-depth/plasma-framework.md)
 5. [深入理解 Plasma （二）Plasma 细节剖析](./Plasma-in-depth/plasma-in-detail.md)
+6. [深入理解 Plasma （三）Plasma MVP](./Plasma-in-depth/plasma-mvp.md)
 
 ### 联系我
 
