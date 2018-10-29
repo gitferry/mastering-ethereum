@@ -6,7 +6,7 @@
 
 整个 Plasma MVP 的生命周期可以通过下面这幅图表现出来：
 
-<img src="./images/plasma-mvp.jpg"  width="360" height="400" alt="Blockchains of Blockchain" />
+<img src="https://raw.githubusercontent.com/gitferry/mastering-ethereum/master/Plasma-in-depth/images/plasma-mvp.jpg"  width="360" height="400" alt="Blockchains of Blockchain" />
 
 ### Plasma 合约
 首先需要将 Plasma 合约部署到主链（以太坊）上作为主链和子链沟通的媒介。Plasma 合约会处理由子链提交的区块，并且将区块的哈希值存在主链上。除此之外，还会处理用户的存款（deposit）、取款（withdrawal/exit）以及争议（challenge）操作。
@@ -80,13 +80,15 @@ Operator 可以采用最简单的 REST API 方式实现，子链中的用户可�
 
 下面对这两个攻击场景进行分析，观察 Plasma MVP 如何保证资产的安全性：
 
-####场景1
+场景1
+
 1. Alice 使用最初加入子链时生成的交易作为证据向主链提出取款申请；
 2. Bob（或者其他任意用户）拥有 Alice 申请退出的 UTXO 被花费的交易证明，并将此作为证据向主链提出一个争议；
 3. 争议生效，Alice 的退出申请被驳回，同时将 Alice 申请退出的押金发送给 Bob；
 4. Alice 的攻击失效。
 
-####场景2
+场景2
+
 1. Operator 创建了一个非法交易，并且将其打包生成区块之后在主链得到确认；
 2. Operator 提交取款申请，打算将 Alice 的资产取走；
 3. 在争议期内，Alice 发现了 Operator 的恶意行为，立即提出取款申请，退出子链；
