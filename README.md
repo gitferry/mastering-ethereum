@@ -11,6 +11,7 @@
 4. [深入理解 Plasma （一）Plasma 框架](./Plasma-in-depth/plasma-framework.md)
 5. [深入理解 Plasma （二）Plasma 细节剖析](./Plasma-in-depth/plasma-in-detail.md)
 6. [深入理解 Plasma （三）Plasma MVP](./Plasma-in-depth/plasma-mvp.md)
+7. [深入理解 Plasma （四）Plasma Cash](./Plasma-in-depth/plasma-cash.md)
 
 ### 联系我
 
