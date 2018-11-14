@@ -12,14 +12,14 @@ Plasma Cash 中的每次存款操作都会对应产生一个 NFT（non-fungible 
 ### Plasma Cash 区块
 Plasma Cash 中的每个 token 都被分配唯一的 ID，因此可以按 ID 的顺序存储每个 token 的交易历史。Plasma Cash 的区块按 token ID 的顺序给每个 token 分配了一个插槽（slot），每个插槽会记录这个 token 是否被交易的信息。例如在下图（来源[[4]](https://github.com/ethsociety/learn-plasma)）的区块中，包含 4 个 token，id 分别是 #1，#2，#3，#4。其中 #1，#2，#3 被标记为没有被花费，而 #4 由用户 A 发送给用户 B。
 
-<img src="./images/pc-block.png"  width="600" height="190" alt="Plasma Cash Block" />
+<img src="https://raw.githubusercontent.com/gitferry/mastering-ethereum/master/Plasma-in-depth/images/pc-block.png"  width="600" height="190" alt="Plasma Cash Block" />
 
 从上面这个例子中我们可以看到，每个插槽记录了其所对应的 token 在当前区块中的交易状态，所有存储了某个 token 的交易状态的区块按时间顺序连在一起就构成了这个 token 的全部交易历史。每当一个 token 被分配了一个 id，之后的所有交易状态都会被保存在每个区块相同的插槽中，也不会被其它 token 取代。因此，用户只需要关注每个区块中存储属于自己的 token 的状态，完全不用关心别的插槽存储的内容。
 
 ### 交易与验证
 由于 Plasma Cash 中的节点只追踪属于自己的 token 的交易历史，因此当有交易发生时，token 的发送者要向接收者提供关于这个 token 所有的交易历史（从存款交易开始）以便接收者验证。从下图（来源[[4]](https://github.com/ethsociety/learn-plasma)）的例子中可以看到 4 个区块中所记录的 4 个 token 的交易历史。
 
-<img src="./images/pc-tx.png"  width="400" height="500" alt="Plasma Cash TXs" />
+<img src="https://raw.githubusercontent.com/gitferry/mastering-ethereum/master/Plasma-in-depth/images/pc-tx.png"  width="400" height="500" alt="Plasma Cash TXs" />
 
 截止到区块 #4，可以看到token #1 和 token #3 始终没有被交易。token #2 在区块 #2 被 E 发送给了 F，在区块 #4 被 F 发送给了 G，在其它区块没有发生交易，token #2 的最终所有权归 G。token #4 在区块 #1 被 A 发送给了 B，在区块 #3 被 B 发送给了 C，在其它区块没有发生交易，token #4 的最终所有权归 C。F 为了向 G 证明 token #2 的合法性，需要向 G 提供 token #2 在前 4 个区块中的所有交易历史，也就是说不仅需要包括区块 #2 中 E => F 的交易证明、区块 #4中 F => G 的交易证明，还要包括在区块 #1 和 #3 中没有被交易的证明。到这里可能感觉有点奇怪，为什么还要包括没有被交易的证明？这是为了防止双花，因为 G 并不知道在区块 #1 和 #3 中 token #2 是否被交易给了其它人。假如 F 在区块 #3 中将 token #2 发送给了 H，并且对 G 隐瞒了这个交易，那么发生在区块 #4 中的 F => G 就是非法（双花）的。因此，在 Plasma Cash 中，完整且合法的交易历史是一个 token 被安全交易的前提。
 
@@ -28,7 +28,7 @@ Plasma Cash 中的每个 token 都被分配唯一的 ID，因此可以按 ID 的
 
 SMT 实际上一点都不复杂，它的叶子节点是按数据集中的元素序号顺序排列的。如果某个叶子节点对应的元素为空，那么该叶子节点将存储一个特定的值（例如 0 的哈希值）。一个简单的 SMT 示例如下图（来源[[5]](https://medium.com/@kelvinfichter/whats-a-sparse-merkle-tree-acda70aeb837)）所示。
 
-<img src="./images/SMT.png"  width="400" height="400" alt="Sparse Merkle Tree" />
+<img src="https://raw.githubusercontent.com/gitferry/mastering-ethereum/master/Plasma-in-depth/images/SMT.png"  width="400" height="400" alt="Sparse Merkle Tree" />
 
 扩展到 Plasma Cash 中，SMT 的叶子节点对应了区块中给每个 token 分配的插槽，按照每个 token 的 ID 排序。每个叶子节点存储对应的 token 的交易信息，如果 token 在这个区块中没有被交易，则相应的叶子节点存储的值为 *null*。
 
@@ -55,18 +55,18 @@ Plasma Cash 中的取款操作在流程上跟 Plasma MVP 大体相同，都要�
 #### 发送交易后立即退出
 如下图（来源[[7]](https://github.com/loomnetwork/plasma-paper/blob/master/plasma_cash.pdf)）所示，假设攻击者 Alice 向 Bob 发送了一个 token A，且 Bob 已经验证了 A 的交易历史没有问题，交易在区块 N+X 得到确认。在这之后，Alice 立即提交取款申请，企图将 token A 取回主链，并提交 A 在区块 N 以及之前的交易证明。为了应对这种情况，Bob 必须及时发现 Alice 的取款行为，并且在争议期结束前提交在区块 N+X 中 token A 被 Alice 发送给 Bob 的证明。这里需要注意的是，如果 Bob 在区块 N+Y 将 token A 发送给 Charlie 的交易是不能被当做争议证明的，只有最接近被争议的交易的下一个交易证明有效。
 
-<img src="./images/attack1.png"  width="700" height="220" alt="attack1" />
+<img src="https://raw.githubusercontent.com/gitferry/mastering-ethereum/master/Plasma-in-depth/images/attack1.png"  width="700" height="220" alt="attack1" />
 
 #### 双花攻击
 双花攻击需要 operator 配合，将含有已经被花费的 token 的交易打包入下一个区块中。如下图所示（来源[[7]](https://github.com/loomnetwork/plasma-paper/blob/master/plasma_cash.pdf)），攻击者 Alice 和 Charlie 是同谋，Alice 向 Bob 发送一个 token A 在区块 N+X 被确认，之后 Alice 又将 token A 发送给 Charlie，并在区块 N+Y 被确认。这时在主链看来，Bob 和 Charlie 都是 token A 的合法拥有者。接下来，Charlie 立即提交取款申请，企图取走 token A。Bob 为了防止自己的 token 被盗，可以在争议期内提交在区块 N+X 被确认的交易，表明自己在 Charlie 之前已经拥有了 token A。
 
-<img src="./images/attack2.png"  width="700" height="300" alt="attack2" />
+<img src="https://raw.githubusercontent.com/gitferry/mastering-ethereum/master/Plasma-in-depth/images/attack2.png"  width="700" height="300" alt="attack2" />
 
 #### 取款包含非法交易历史
 
 这种攻击需要联合比较多的同谋者。如下图所示，Alice 在区块 N 拥有 token A。Bob 联合 operator、Charlie 以及 Dylan 企图盗走 Alice 的 token。首先，operator 伪造 Alice 将 token A 发送给 Bob 的交易，并在区块 N+X 得到确认，之后 Bob 将 token 发送给 Charlie，在区块 N+Y 确认。同样地，Charlie 接着将 token 发送给 Dylan，在区块 N+Z 确认。这是，Dylan 提出取款申请，企图取走 token A。Dylan 用于取款申请的两个交易证明 Charlie => Dylan 和 Bob => Charlie 都是合法的，但 token A 的交易历史中有一部分是伪造的。Alice 为了证明自己是 token A 的最新合法拥有者，可以提出争议，要求 Dylan 提供 Alice => Bob 的交易证明，同时 Alice 需要提交一部分保证金（否则任何人都可以随便提出争议）。Dylan 必须在一定的时间内提供合法的交易证明，否则取款失效。
 
-<img src="./images/attack3.png"  width="900" height="250" alt="attack3" />
+<img src="https://raw.githubusercontent.com/gitferry/mastering-ethereum/master/Plasma-in-depth/images/attack3.png"  width="900" height="250" alt="attack3" />
 
 ### 相关项目
 
